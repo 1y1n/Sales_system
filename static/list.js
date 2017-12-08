@@ -15,7 +15,7 @@ function chuku_card(form){//弹窗确定是否出库，还有填写操作人,售
         alert('售价不能为空');
         return false;}
 
-    else if(fkfs == 'None'){
+    else if(fkfs == '' || fkfs== 'None'){
         alert('付款方式不能为空');
         return false;}
 
@@ -52,7 +52,7 @@ function chuku_mobile(form){//弹窗确定是否出库，还有填写操作人,�
         alert('售价不能为空');
         return false;}
 
-    else if(fkfs == 'None'){
+    else if(fkfs == '' || fkfs == 'None'){
         alert('付款方式不能为空');
         return false;}
 
@@ -75,7 +75,7 @@ function chuku_parts(form){//弹窗确定是否出库，还有填写操作人,�
         alert('售价不能为空');
         return false;}
 
-    else if(fkfs == 'None'){
+    else if(fkfs == '' || fkfs == 'None'){
         alert('付款方式不能为空');
         return false;}
 
