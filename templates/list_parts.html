@@ -1,0 +1,25 @@
+<form method="post" action="">
+    {% raw xsrf_form_html() %}
+<tr>
+    <td>{{list.id}}<input type="hidden" name="id" value="{{list.id}}"></td>
+    <td>{{list.pp}}</td>
+    <td>{{list.mc}}</td>
+    <td>{{list.rkrq}}</td>
+    <td>{{list.ckrq}}</td><input type="hidden" name="ckrq" value="{{list.ckrq}}">
+    {% if user=='admin' %}<td>{{list.jinjia}}</td>{% end %}
+    <td><input type="text" name="shoujia" value="{{list.shoujia}}" class="input-box" ></td>
+    <td><input type="text" name="fkfs" value="{{list.fkfs}}" class="input-box" ></td>
+    <td><input type="text" name="bz" value="{{list.bz}}" class="input-box-bz" ></td>
+    <td>
+        <table>
+            <colgroup>
+                <col width="50%">
+                <col width="50%">
+            </colgroup>
+            <input type="submit" name="caozuo" value="出库" onclick="return chuku_parts(this.form)">
+            {% if user=='admin' %}<input type="submit" name="caozuo" value="删除" onclick="return shanchu()">{% end %}
+        </table>
+    </td>
+</tr>
+
+</form>

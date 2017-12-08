@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{static_url('style.css')}}">
+    <script type="text/javascript" src="{{static_url('jquery-3.1.1.min.js')}}"></script>
+    <script type="text/javascript" src="{{static_url('list.js')}}"></script>
+    <title>管理系统</title>
+</head>
+<body>
+
+<p>欢迎:</p>
+<form action="/logout" method="get">
+    {% raw xsrf_form_html() %}
+    <input type="submit" value="退出">
+</form>
+{% if user=='admin' %}
+<div class="menu">
+    <ul >
+        <li><a href="/"><span>主页</span></a></li>
+        <li><a href="/add-mobile"><span>手机入库</span></a></li>
+        <li><a href="/inventory-mobile"><span>手机库存</span></a></li>
+        <li><a href="/add-parts"><span>配件入库</span></a></li>
+        <li><a href="/inventory-parts"><span>配件库存</span></a></li>
+        <li><a href="/add-card"><span>号码卡入库</span></a></li>
+        <li><a href="/inventory-card"><span>号码卡库存</span></a></li>
+        <li><a href="/add-gift"><span>礼品入库</span></a></li>
+        <li><a href="/inventory-gift"><span>礼品库存</span></a></li>
+        <li><a href="/count"><span>账单</span></a></li>
+    </ul>
+</div>
+{% elif user=='normal' %}
+<div class="menu">
+    <ul >
+        <li><a href="/"><span>主页</span></a></li>
+        <li><a href="/inventory-mobile"><span>手机库存</span></a></li>
+        <li><a href="/inventory-parts"><span>配件库存</span></a></li>
+        <li><a href="/inventory-card"><span>号码卡库存</span></a></li>
+        <li><a href="/inventory-gift"><span>礼品库存</span></a></li>
+    </ul>
+</div>
+{% else %}
+<u>权限错误！请重新登陆.</u>
+{% end %}
+
+{% block body %}
+
+        <div style="width:1500px;margin:0 auto">
+            <table cellspacing="0" cellpadding="0" class="bordered">
+                <colgroup>
+                <col width="5%">
+                <col width="10%">
+                <col width="5%">
+                <col width="15%">
+                <col width="15%">
+                <col width="15%">
+                <col width="10%">
+                <col width="10%">
+                <col width="10%">
+            </colgroup>
+            <tr>
+                <th>id</th>
+                <th>品牌</th>
+                <th>型号</th>
+                <th>串号</th>
+                <th>入库日期</th>
+                <th>出库日期</th>
+                <th>售价</th>
+                <th>付款方式</th>
+                <th>备注</th>
+             </tr>
+        <!--{% module Entry_mobile('count_mobile') %}-->
+        <!-- use module to show list.  -->
+        <tbody>
+        {%set mobile_shuliang,mobile_shouru=0,0 %}
+        {% for list in mobile_res %}
+        {%set mobile_shuliang +=1 %}
+        {%set mobile_shouru += list['shoujia'] %}
+            <tr>
+                <td>{{list.id}}</td>
+                <td>{{list.pp}}</td>
+                <td>{{list.xh}}</td>
+                <td>{{list.ch}}</td>
+                <td>{{list.rkrq}}</td>
+                <td>{{list.ckrq}}</td>
+                <td>{{list.shoujia}}</td>
+                <td>{{list.fkfs}}</td>
+                <td>{{list.bz}}</td>
+            </tr>
+        {% end %}
+                    <tr>
+                        <td>总计</td>
+                        <td>数量：{{ mobile_shuliang }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>收入：{{mobile_shouru}}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+        </tbody>
+        </table>
+
+        </div>
+        <div style="width:1500px;margin:0 auto">
+            <table cellspacing="0" cellpadding="0" class="bordered">
+                <colgroup>
+                    <col width="5%">
+                    <col width="10%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="10%">
+                    <col width="10%">
+                    <col width="10%">
+                </colgroup>
+                <tr>
+                    <th>id</th>
+                    <th>品牌</th>
+                    <th>名称</th>
+                    <th>入库日期</th>
+                    <th>出库日期</th>
+                    <th>售价</th>
+                    <th>付款方式</th>
+                    <th>备注</th>
+                 </tr>
+                <!--{% module Entry_mobile('count_parts') %}-->
+            <!-- use module to show list.  -->
+                <tbody>
+                {%set parts_shuliang,parts_shouru=0,0 %}
+                {% for list in parts_res %}
+                {%set parts_shuliang +=1 %}
+                {%set parts_shouru += list['shoujia'] %}
+                    <tr>
+                        <td>{{list.id}}</td>
+                        <td>{{list.pp}}</td>
+                        <td>{{list.mc}}</td>
+                        <td>{{list.rkrq}}</td>
+                        <td>{{list.ckrq}}</td>
+                        <td>{{list.shoujia}}</td>
+                        <td>{{list.fkfs}}</td>
+                        <td>{{list.bz}}</td>
+                    </tr>
+                    {% end %}
+                <tr>
+                        <td>总计</td>
+                        <td>数量：{{ parts_shuliang }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>收入：{{parts_shouru}}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <div style="width:1500px;margin:0 auto">
+            <table cellspacing="0" cellpadding="0" class="bordered">
+            <colgroup>
+                <col width="5%">
+                <col width="10%">
+                <col width="15%">
+                <col width="15%">
+                <col width="15%">
+                <col width="10%">
+                <col width="10%">
+            </colgroup>
+                <tr>
+                    <th>id</th>
+                    <th>类型</th>
+                    <th>号码</th>
+                    <th>入库日期</th>
+                    <th>出库日期</th>
+                    <th>售价</th>
+                    <th>付款方式</th>
+                    <th>备注</th>
+                 </tr>
+           <!-- {% module Entry_mobile('count_card') %}-->
+        <!-- use module to show list.  -->
+            <tbody>
+                {%set card_shuliang,card_shouru=0,0 %}
+                {% for list in card_res %}
+                {%set card_shuliang +=1 %}
+                {%set card_shouru += list['shoujia'] %}
+                <tr>
+                    <td>{{list.id}}</td>
+                    <td>{{list.lx}}</td>
+                    <td>{{list.haoma}}</td>
+                    <td>{{list.rkrq}}</td>
+                    <td>{{list.ckrq}}</td>
+                    <td>{{list.shoujia}}</td>
+                    <td>{{list.fkfs}}</td>
+                    <td>{{list.bz}}</td>
+                </tr>
+            {% end %}
+            <tr>
+                        <td>总计</td>
+                        <td>数量：{{ card_shuliang }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>收入：{{card_shouru}}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+            </tbody>
+            </table>
+
+        </div>
+        <div style="width:1500px;margin:0 auto">
+            <table cellspacing="0" cellpadding="0" class="bordered">
+                <colgroup>
+                    <col width="5%">
+                    <col width="10%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="10%">
+                </colgroup>
+                <tr>
+                    <th>id</th>
+                    <th>名称</th>
+                    <th>入库日期</th>
+                    <th>出库日期</th>
+                    <th>备注</th>
+                 </tr>
+                <!-- {% module Entry_mobile('count_gift') %} -->
+        <!-- use module to show list.  -->
+                <tbody>
+                {%set gift_shuliang,gift_chengben,=0,0 %}
+                {% for list in gift_res %}
+                {%set gift_shuliang +=1 %}
+                {%set gift_chengben += list['jinjia'] %}
+                    <tr>
+                        <td>{{list.id}}</td>
+                        <td>{{list.mc}}</td>
+                        <td>{{list.rkrq}}</td>
+                        <td>{{list.ckrq}}</td>
+                        <td>{{list.bz}}</td>
+                    </tr>
+                {% end %}
+                <tr>
+                        <td>总计</td>
+                        <td>数量：{{ gift_shuliang }}</td>
+                        <td>收入：0</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+{% end %}
+
+
+</body>
+</html>

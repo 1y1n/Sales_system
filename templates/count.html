@@ -1,0 +1,563 @@
+{% extends "login_success.html" %}
+
+{% block body %}
+    {% if user=='admin' %}
+        <div style="width:1500px;margin:0 auto">
+            <form action="" method="post" name="submit_date">
+                {% raw xsrf_form_html() %}
+                <input type="date" name="begin_date" value=""/>
+                <input type="date" name="end_date" value=""/>
+                <input type="submit" name="day_submit" value="按日期查看">
+                <input type="month" name="begin_month" value=""/>
+                <input type="month" name="end_month" value=""/>
+                <input type="submit" name="month_submit" value="按月份查看">
+            </form>
+        </div>
+
+        <div style="width:1500px;margin:0 auto">
+            <table cellspacing="0" cellpadding="0" class="bordered">
+                <colgroup>
+                <col width="5%">
+                <col width="10%">
+                <col width="5%">
+                <col width="15%">
+                <col width="15%">
+                <col width="10%">
+                <col width="10%">
+                <col width="10%">
+                <col width="10%">
+                <col width="10%">
+            </colgroup>
+
+        {% module Entry_mobile('count_mobile') %}
+        <!-- use module to show list.  -->
+        <tbody>
+        {%set mobile_shuliang,mobile_chengben,mobile_shouru=0,0,0 %}
+        {% for list in mobile_res %}
+        {%set mobile_shuliang +=1 %}
+        {%set mobile_chengben += list['jinjia'] %}
+        {%set mobile_shouru += list['shoujia'] %}
+            <tr>
+                <td>{{list.id}}</td>
+                <td>{{list.pp}}</td>
+                <td>{{list.xh}}</td>
+                <td>{{list.ch}}</td>
+                <td>{{list.rkrq}}</td>
+                <td>{{list.ckrq}}</td>
+                <td>{{list.jinjia}}</td>
+                <td>{{list.shoujia}}</td>
+                <td>{{list.fkfs}}</td>
+                <td>{{list.bz}}</td>
+            </tr>
+        {% end %}
+                    <tr>
+                        <td>总计</td>
+                        <td>数量：{{ mobile_shuliang }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>成本：{{mobile_chengben}}</td>
+                        <td>收入：{{mobile_shouru}}</td>
+                        <td></td>
+                        <td>利润：{{mobile_lirun=mobile_shouru-mobile_chengben}}</td>
+                    </tr>
+
+        </tbody>
+        </table>
+
+        </div>
+        <script src="{{static_url("echarts.js")}}"></script>
+            <div id="mobile" style="width: auto;height:400px;"></div>
+                <script type="text/javascript">
+                // 基于准备好的dom，初始化echarts实例
+                var myChart_mobile = echarts.init(document.getElementById('mobile'));
+
+                // 指定图表的配置项和数据
+                {% autoescape None %}
+                var option = {
+            title: {
+                text: '每日销量(手机)',
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    crossStyle: {
+                        color: '#999'
+                    }
+                }
+            },
+            toolbox: {
+                feature: {
+                    dataView: {show: true, readOnly: false},
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            legend: {
+                data:{{mobile_a_keys}}
+            },
+            xAxis: {
+                type: 'category',
+                data: {{ date }},
+                axisPointer:{
+                    type: 'shadow'
+                }
+
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '数量',
+                    interval:1,
+                    axisLabel: {
+                        formatter: '{value} 台'
+                    }
+                },
+                {
+                    type: 'value',
+                    name: '收入',
+                    interval: 100,
+                    axisLabel: {
+                        formatter: '{value} 元'
+                    }
+                }
+            ],
+            series: [
+                    {% for i in mobile_b %}
+                    {
+                        name: '{{ (i[0].encode('utf-8')) }}',
+                        type: 'bar',
+                        data: {{ i[1] }}
+                    },
+                    {% end %}
+                    {
+                    name:'收入',
+                    type:'line',
+                    yAxisIndex: 1,
+                    data:{{mobile_c}}
+                    }
+            ],
+
+        };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart_mobile.setOption(option);
+                window.addEventListener("resize",function(){
+                    myChart_mobile.resize();
+                });
+            </script>
+
+
+
+        <div style="width:1500px;margin:0 auto">
+            <table cellspacing="0" cellpadding="0" class="bordered">
+                <colgroup>
+                    <col width="5%">
+                    <col width="10%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="10%">
+                    <col width="10%">
+                    <col width="10%">
+                    <col width="10%">
+                </colgroup>
+                {% module Entry_mobile('count_parts') %}
+            <!-- use module to show list.  -->
+                <tbody>
+                {%set parts_shuliang,parts_chengben,parts_shouru=0,0,0 %}
+                {% for list in parts_res %}
+                {%set parts_shuliang +=1 %}
+                {%set parts_chengben += list['jinjia'] %}
+                {%set parts_shouru += list['shoujia'] %}
+                    <tr>
+                        <td>{{list.id}}</td>
+                        <td>{{list.pp}}</td>
+                        <td>{{list.mc}}</td>
+                        <td>{{list.rkrq}}</td>
+                        <td>{{list.ckrq}}</td>
+                        <td>{{list.jinjia}}</td>
+                        <td>{{list.shoujia}}</td>
+                        <td>{{list.fkfs}}</td>
+                        <td>{{list.bz}}</td>
+                    </tr>
+                    {% end %}
+                <tr>
+                        <td>总计</td>
+                        <td>数量：{{ parts_shuliang }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>成本：{{parts_chengben}}</td>
+                        <td>收入：{{parts_shouru}}</td>
+                        <td></td>
+                        <td>利润：{{parts_lirun=parts_shouru-parts_chengben}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+
+
+        <div id="parts" style="width: auto;height:400px;"></div>
+                <script type="text/javascript">
+                // 基于准备好的dom，初始化echarts实例
+                var myChart_parts = echarts.init(document.getElementById('parts'));
+
+                // 指定图表的配置项和数据
+                {% autoescape None %}
+                var option = {
+            title: {
+                text: '每日销量(配件)',
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    crossStyle: {
+                        color: '#999'
+                    }
+                }
+            },
+            toolbox: {
+                feature: {
+                    dataView: {show: true, readOnly: false},
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            legend: {
+                data:{{parts_a_keys}}
+            },
+            xAxis: {
+                type: 'category',
+                data: {{ date }},
+                axisPointer:{
+                    type: 'shadow'
+                }
+
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '数量',
+                    interval:1,
+                    axisLabel: {
+                        formatter: '{value} 台'
+                    }
+                },
+                {
+                    type: 'value',
+                    name: '收入',
+                    interval: 100,
+                    axisLabel: {
+                        formatter: '{value} 元'
+                    }
+                }
+            ],
+            series: [
+                    {% for i in parts_b %}
+                    {
+                        name: '{{ (i[0].encode('utf-8')) }}',
+                        type: 'bar',
+                        data: {{ i[1] }}
+                    },
+                    {% end %}
+                    {
+                    name:'收入',
+                    type:'line',
+                    yAxisIndex: 1,
+                    data:{{parts_c}}
+                    }
+            ],
+
+        };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart_parts.setOption(option);
+                window.addEventListener("resize",function(){
+                    myChart_parts.resize();
+                });
+            </script>
+
+
+        <div style="width:1500px;margin:0 auto">
+            <table cellspacing="0" cellpadding="0" class="bordered">
+            <colgroup>
+                <col width="5%">
+                <col width="10%">
+                <col width="15%">
+                <col width="15%">
+                <col width="15%">
+                <col width="10%">
+                <col width="10%">
+                <col width="10%">
+                <col width="10%">
+            </colgroup>
+            {% module Entry_mobile('count_card') %}
+        <!-- use module to show list.  -->
+            <tbody>
+                {%set card_shuliang,card_chengben,card_shouru=0,0,0 %}
+                {% for list in card_res %}
+                {%set card_shuliang +=1 %}
+                {%set card_chengben += list['jinjia'] %}
+                {%set card_shouru += list['shoujia'] %}
+                <tr>
+                    <td>{{list.id}}</td>
+                    <td>{{list.lx}}</td>
+                    <td>{{list.haoma}}</td>
+                    <td>{{list.rkrq}}</td>
+                    <td>{{list.ckrq}}</td>
+                    <td>{{list.jinjia}}</td>
+                    <td>{{list.shoujia}}</td>
+                    <td>{{list.fkfs}}</td>
+                    <td>{{list.bz}}</td>
+                </tr>
+            {% end %}
+            <tr>
+                        <td>总计</td>
+                        <td>数量：{{ card_shuliang }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>成本：{{card_chengben}}</td>
+                        <td>收入：{{card_shouru}}</td>
+                        <td></td>
+                        <td>利润：{{card_lirun=card_shouru-card_chengben}}</td>
+                    </tr>
+            </tbody>
+            </table>
+
+        </div>
+
+
+
+
+        <div id="card" style="width: auto;height:400px;"></div>
+                <script type="text/javascript">
+                // 基于准备好的dom，初始化echarts实例
+                var myChart_card = echarts.init(document.getElementById('card'));
+
+                // 指定图表的配置项和数据
+                {% autoescape None %}
+                var option = {
+            title: {
+                text: '每日销量(号码卡)',
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    crossStyle: {
+                        color: '#999'
+                    }
+                }
+            },
+            toolbox: {
+                feature: {
+                    dataView: {show: true, readOnly: false},
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            legend: {
+                data:{{card_a_keys}}
+            },
+            xAxis: {
+                type: 'category',
+                data: {{ date }},
+                axisPointer:{
+                    type: 'shadow'
+                }
+
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '数量',
+                    interval:1,
+                    axisLabel: {
+                        formatter: '{value} 台'
+                    }
+                },
+                {
+                    type: 'value',
+                    name: '收入',
+                    interval: 100,
+                    axisLabel: {
+                        formatter: '{value} 元'
+                    }
+                }
+            ],
+            series: [
+                    {% for i in card_b %}
+                    {
+                        name: '{{ (i[0].encode('utf-8')) }}',
+                        type: 'bar',
+                        data: {{ i[1] }}
+                    },
+                    {% end %}
+                    {
+                    name:'收入',
+                    type:'line',
+                    yAxisIndex: 1,
+                    data:{{card_c}}
+                    }
+            ],
+
+        };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart_card.setOption(option);
+                window.addEventListener("resize",function(){
+                    myChart_card.resize();
+                });
+            </script>
+
+
+        <div style="width:1500px;margin:0 auto">
+            <table cellspacing="0" cellpadding="0" class="bordered">
+                <colgroup>
+                    <col width="5%">
+                    <col width="10%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="15%">
+                    <col width="10%">
+                </colgroup>
+                {% module Entry_mobile('count_gift') %}
+        <!-- use module to show list.  -->
+                <tbody>
+                {%set gift_shuliang,gift_chengben,=0,0 %}
+                {% for list in gift_res %}
+                {%set gift_shuliang +=1 %}
+                {%set gift_chengben += list['jinjia'] %}
+                    <tr>
+                        <td>{{list.id}}</td>
+                        <td>{{list.mc}}</td>
+                        <td>{{list.rkrq}}</td>
+                        <td>{{list.ckrq}}</td>
+                        <td>{{list.jinjia}}</td>
+                        <td>{{list.bz}}</td>
+                    </tr>
+                {% end %}
+                <tr>
+                        <td>总计</td>
+                        <td>数量：{{ gift_shuliang }}</td>
+                        <td>成本：{{gift_chengben}}</td>
+                        <td>收入：0</td>
+                        <td></td>
+                        <td>利润：{{gift_lirun=-gift_chengben}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+
+        <div id="all" style="width: auto;height:400px;"></div>
+                <script type="text/javascript">
+                // 基于准备好的dom，初始化echarts实例
+                var myChart_all = echarts.init(document.getElementById('all'));
+
+                // 指定图表的配置项和数据
+                {% autoescape None %}
+                var option = {
+            title : {
+                text: '营业额总计(图为营业额)',
+                subtext: '手机+配件+号码卡(总收入:{{mobile_shouru+parts_shouru+card_shouru}}总利润:{{mobile_lirun+parts_lirun+card_lirun+gift_lirun}})',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                data: ['手机','配件','号码卡']
+            },
+            series : [
+                {
+                    name: '收入',
+                    type: 'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data:[
+                        {value:{{sum(mobile_c)}}, name:'手机'},
+                        {value:{{sum(parts_c)}}, name:'配件'},
+                        {value:{{sum(card_c)}}, name:'号码卡'},
+                    ],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart_all.setOption(option);
+                window.addEventListener("resize",function(){
+                    myChart_all.resize();
+                });
+            </script>
+
+
+        <div id="fenxi" style="width: auto;height:400px;"></div>
+                <script type="text/javascript">
+                // 基于准备好的dom，初始化echarts实例
+                var myChart_fenxi = echarts.init(document.getElementById('fenxi'));
+
+                // 指定图表的配置项和数据
+                {% autoescape None %}
+                var option = {
+
+            // Make gradient line here
+            visualMap: [{
+                show: false,
+                type: 'continuous',
+                seriesIndex: 0,
+                min: 0,
+                max: 400
+            }, ],
+
+
+            title: [{
+                left: 'center',
+                text: '营业额折线图'
+            }, ],
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: [{
+                data: {{date}}
+            }, ],
+            yAxis: [{
+                splitLine: {show: false}
+            }, ],
+            grid: [{
+                bottom: '60%'
+            }, ],
+            series: [{
+                type: 'line',
+                showSymbol: false,
+                data: {{all_data}}
+            }, ]
+        };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart_fenxi.setOption(option);
+                window.addEventListener("resize",function(){
+                    myChart_fenxi.resize();
+                });
+            </script>
+
+    {% else %}
+    <u>权限错误！请重新登陆.</u>
+    {% end %}
+{% end %}

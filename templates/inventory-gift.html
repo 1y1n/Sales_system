@@ -1,0 +1,64 @@
+{% extends "login_success.html" %}
+
+{% block body %}
+
+        <div class="content" style="top:500px">
+            <p>搜索:</p>
+            <form method="post" action="/search" name="form_search">
+                {% raw xsrf_form_html() %}
+                <tbody>
+                    <dl>
+                        <th width="20px"><input type="text" name="mc" placeholder="名称"></th>
+                        <th><input type="text" name="rkrq" placeholder="入库日期"></th>
+                    </dl>
+                    <dl>
+                        <th><input type="text" name="ckrq" placeholder="出库日期"></th>
+                        <input type="submit" name="search-gift" value="搜索" onclick="return sousuo()">
+                    </dl>
+                </tbody>
+            </form>
+        </div>
+
+        <table cellspacing="0" cellpadding="0" class="bordered">
+            <colgroup>
+                <col width="3%">
+                <col width="5%">
+                <col width="10%">
+                <col width="15%">
+                {% if user=='admin' %}<col width="5%">{% end %}
+                <col width="5%">
+                <col width="12%">
+            </colgroup>
+                <tr>
+                    <th>id</th>
+                    <th>名称</th>
+                    <th>入库日期</th>
+                    <th>出库日期</th>
+                    {% if user=='admin' %}<th>进价</th>{% end %}
+                    <th>备注</th>
+                    <th> 操作 </th>
+                 </tr>
+            <!--{% module Entry_mobile('gift') %}-->
+
+        <!-- use module to show list.  -->
+        <tbody>
+            {% for list in res %}
+                {% module List_gift(list,user) %}
+
+            {% end %}
+        </tbody>
+        </table>
+        <!--
+            {% block tbody %}
+            {% end %}
+        -->
+        <script>
+            function sousuo(){
+            if (form_search.mc.value=='' && form_search.rkrq.value=='' && form_search.ckrq.value==''){
+            alert ('请输入搜索条件');
+            }
+            }
+
+        </script>
+{% end %}
+

@@ -1,0 +1,67 @@
+{% extends "login_success.html" %}
+
+{% block body %}
+
+<script >
+function getCookie(name) {
+    var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+    return r ? r[1] : undefined;
+}
+var row = 0;
+$(document).ready(function(){
+	$("#submit").click(function(){
+	    var lx = myform.lx.value;
+	    var haoma = myform.haoma.value;
+	    var jinjia = myform.jinjia.value;
+	    var bz = myform.bz.value;
+	    if (lx=='' || haoma =='' || jinjia==''){
+	        alert('not null');
+	        return 0;
+	    }
+	    xsrf=getCookie('_xsrf');
+		$.ajax({
+			type: "POST",
+			url: "/test",
+			dataType: "json",
+			data:{"_xsrf":xsrf, "lx":lx, "haoma":haoma,"jinjia":jinjia,"bz":bz},
+			success: function(msg){
+				alert(msg['message']);
+			}
+		});
+	});
+});
+</script>
+
+
+<body>
+
+<div align="center"></div>
+
+<div id="div1" style="font-size:24px">获取数据库新闻</div>
+<button id="btn1">获取新闻</button>
+</body>
+
+
+    {% if user=='admin' %}
+        <p>添加：</p>
+        <div class="page">
+        <form name="myform">
+
+            <dl class="page-list">
+                <dt>类型:<dd class="input"><input type="text" name="lx"> </dd></dt>
+                <dt>号码:<dd class="input"><input type="text" name="haoma"> </dd></dt>
+                <dt>进价:<dd class="input"><input type="text" name="jinjia"> </dd></dt>
+                <dt>备注:<dd class="input"><input type="text" name="bz"> </dd></dt>
+                <button id="submit" type="button">提交</button>  <!-- 添加成功活着失败用 JS 实现  -->
+                <input type="reset" value="重新输入" >
+
+            </dl>
+
+
+
+        </form>
+        </div>
+    {% else %}
+    <u>权限错误！请重新登陆.</u>
+    {% end %}
+{% end %}

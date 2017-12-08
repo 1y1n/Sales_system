@@ -1,0 +1,66 @@
+{% extends "login_success.html" %}
+
+
+{% block body %}
+<script >
+function getCookie(name) {
+    var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+    return r ? r[1] : undefined;
+}
+var row = 0;
+$(document).ready(function(){
+	$("#submit").click(function(){
+	    var pp = myform.pp.value;
+	    var xh = myform.xh.value;
+	    var ch = myform.ch.value;
+	    var jinjia = myform.jinjia.value;
+	    var bz = myform.bz.value;
+	    if (pp=='' || xh =='' || jinjia=='' || ch==''){
+	        alert('not null');
+	        return 0;
+	    }
+	    xsrf=getCookie('_xsrf');
+		$.ajax({
+			type: "POST",
+			url: "/add-mobile",
+			dataType: "json",
+			data:{"_xsrf":xsrf, "pp":pp, "xh":xh, "ch":ch, "jinjia":jinjia, "bz":bz},
+			success: function(msg){
+				alert(msg['message']);
+			}
+		});
+	});
+});
+</script>
+    {% if user=='admin' %}
+        <p>添加：</p>
+        <div class="page">
+        <form name="myform">
+
+            <dl class="page-list">
+                <dt>品牌:<dd class="input"><input type="text" name="pp"> </dd></dt>
+                <dt>型号:<dd class="input"><input type="text" name="xh"> </dd></dt>
+                <dt>串号:<dd class="input"><input type="text" name="ch"> </dd></dt>
+                <dt>进价:<dd class="input"><input type="text" name="jinjia"> </dd></dt>
+                <dt>备注:<dd class="input"><input type="text" name="bz"> </dd></dt>
+                <button id="submit" type="button">提交</button>  <!-- 添加成功活着失败用 JS 实现  -->
+                <input type="reset" value="重新输入" >
+
+            </dl>
+
+        {% if res!=None and res!='' %}
+            {{res}}
+            <script> alert('添加成功!')</script>
+            {% elif res=='' %}
+            <p>请输入以上信息</p>
+            {% else %}
+            <script> alert('添加失败!')</script>
+            <p>重新添加.</p>
+            {% end %}
+
+        </form>
+        </div>
+    {% else %}
+    <u>权限错误！请重新登陆.</u>
+    {% end %}
+{% end %}
