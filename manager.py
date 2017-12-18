@@ -19,7 +19,7 @@ define("port", default=8000, help="run on the given port", type=int)
 define("hostaddress", default='127.0.0.1:3306', help="sql host", type=str)
 define("dbname", default="kucun", help="database name", type=str)#kucun
 define("username", default="root", help="db username", type=str)
-define("password", default="123456", help="db password", type=str)#KUCUN123456
+define("password", default="KUCUN123456", help="db password", type=str)#KUCUN123456
 
 
 
@@ -61,11 +61,12 @@ class Login_in_Handler(BaseHandler):
 
 
 class Login_success(BaseHandler):
-    default_end_time = (datetime.datetime.now()).strftime('%Y-%m-%d')
-    default_end_time_sql = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')
 
     @tornado.web.authenticated
     def get(self):
+        default_end_time = (datetime.datetime.now()).strftime('%Y-%m-%d')
+        default_end_time_sql = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')
+
         user = tornado.escape.xhtml_escape(self.current_user)#获取登陆用户名
 
         mobile_sql = 'select * from mobile where ckrq between  DATE_FORMAT("%s","%%%%Y-%%%%m-%%%%d") ' \
@@ -94,11 +95,12 @@ class Logout(BaseHandler):
 
 #账单
 class Count(BaseHandler):
-    default_end_time = (datetime.datetime.now()).strftime('%Y-%m-%d')
-    default_end_time_sql = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')
-    default_begin_time = (datetime.datetime.now() - datetime.timedelta(days=7)).strftime('%Y-%m-%d')
+    
     @tornado.web.authenticated
     def get(self):
+        default_end_time = (datetime.datetime.now()).strftime('%Y-%m-%d')
+        default_end_time_sql = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')
+        default_begin_time = (datetime.datetime.now() - datetime.timedelta(days=7)).strftime('%Y-%m-%d')
         mobile_a_keys, mobile_b, mobile_c = self.chart('Day', 'mobile')
         parts_a_keys, parts_b, parts_c = self.chart('Day', 'parts')
         card_a_keys, card_b, card_c, = self.chart('Day', 'card')  # 以上为手机数量和品牌  ,按　天　计算
